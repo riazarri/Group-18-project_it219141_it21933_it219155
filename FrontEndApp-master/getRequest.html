@@ -1,0 +1,109 @@
+<html>
+
+<head>
+    <title>My Mutual Contract</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="tableStyle.css">
+
+</head>
+
+<body>
+
+
+
+
+<div class="doffs">
+    <h1>Your contracts</h1>
+
+    <div class="divs">
+        <table id="subjectsList">
+            <thead>
+            <tr>
+                <!--to view sto user sto springboot-->
+                <th>ID</th>
+                <th>ONOMA_SIZIGOU_1</th>
+                <th>ONOMA_SIZIGOU_2</th>
+                <th>ONOMA_DIKIGOROU_2</th>
+                <th>ONOMA_SIMBOLAIOGRAFOU</th>
+                <th>IMEROMINIA</th>
+                <th>TOPOS_KATOIKIAS</th>
+                <th>AFM1</th>
+                <th>AFM2</th>
+                <th>AFM3</th>
+                <th>AFM4</th>
+                <th>MITRONIMO</th>
+                <th>PATRONIMO</th>
+                <th>MITRONIMO2</th>
+                <th>PATRONIMO2</th>
+                <th>DIEUTHINSI1</th>
+                <th>DIEUTHINSI2</th>
+                <th>TEKNA</th>
+                <th>EPIMELIA</th>
+                <th>CHECKING REQUIREMENTS</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <button class="create" id="createdayoffs">Create a Request</button>
+        <div id="header"></div>
+    </div>
+
+</div>
+</body>
+<script type="text/javascript">
+    var auth = null;
+    document.getElementById("createdayoffs").onclick = function () {
+        location.href = "/createRequest.html";
+    };
+
+    $('document').ready(function (res) {
+        $("#header").load("header.html");
+        var data = new FormData();
+        var FrontReq = new XMLHttpRequest();
+        FrontReq.addEventListener("readystatechange", function () {
+            if (this.readyState === 4 && this.status == 200) {
+                var requestdata = JSON.parse(this.responseText);
+                auth = requestdata.auth;
+                if (auth == null || auth == "") {
+                    location.replace("http://localhost:3000/error.html");
+                }
+                var data = new FormData();
+                var APIReq = new XMLHttpRequest();
+                APIReq.addEventListener("readystatechange", function () {
+                    if (this.readyState === 4 && this.status == 200) {
+                        var requestdata = JSON.parse(this.responseText);
+                        console.log(requestdata);
+                        addelementstotable(requestdata);
+                    } else if (this.status != 200 && this.status != 0) {
+                        location.replace("http://localhost:3000/error.html");
+
+                    }
+                });
+                APIReq.open("GET", "http://localhost:9090/api/User");
+                APIReq.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:9090/");
+                APIReq.setRequestHeader("Authorization", 'Basic ' + auth);
+                APIReq.send(data);
+
+            }
+        });
+        FrontReq.open("GET", "http://localhost:3000/getvalues");
+        FrontReq.send(null);
+    });
+
+
+    function addelementstotable(data) {
+        var rows = "";
+        $.each(data, function () {
+            rows += "<tr><td>" + this.id + "</td><td>" + this.sub1 + "</td><td>"+ this.sub2 + "</td><td>" + this.sub3 + "</td><td>" + this.sub4 + "</td><td>" + this.sub5+ "</td><td>" + this.sub6+ "</td><td>" + this.sub7 + "</td><td>" + this.sub8 + "</td><td>" + this.sub9 + "</td><td>" + this.sub10 + "</td><td>" + this.sub11 + "</td><td>" + this.sub12 + "</td><td>" + this.sub13 +  "</td><td>" + this.sub14 +  "</td><td>" + this.sub15 + "</td><td>" + this.sub16 + "</td><td>" + this.sub17 + "</td><td>" + this.sub18 + "</td><td>" + this.state +"</td><td>" ;
+        });
+
+        $(rows).appendTo("#subjectsList tbody");
+    };
+
+
+</script>
+
+</html>

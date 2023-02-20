@@ -1,0 +1,142 @@
+<html>
+
+<head>
+    <title>Request Form App!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="createStyle.css">
+</head>
+
+<body>
+
+
+<div className="form">
+    <form className="main" id="createdayoff" action="" method="POST">
+        <h1>Fill yours details below!</h1>
+        <!--to view sto request forma-->
+        <label htmlFor="fname">ONOMA_SIZIGOU_1: (onoma kai epomino)</label>
+        <input type="text" id="sub1" name="fname"><br><br>
+        <label htmlFor="lname">ONOMA_SIZIGOU_2: (onoma kai epomino)</label>
+        <input type="text" id="sub2" name="lname"><br><br>
+        <label htmlFor="fname">ONOMA_DIKIGOROU_2: (onoma kai epomino)</label>
+        <input type="text" id="sub3" name="fname"><br><br>
+        <label htmlFor="lname">ONOMA_SIMBOLAIOGRAFOU: (onoma kai epomino)</label>
+        <input type="text" id="sub4" name="lname"><br><br>
+        <label htmlFor="fname">IMEROMINIA: (eg. 12/3/22)</label>
+        <input type="text" id="sub5" name="fname"><br><br>
+        <label htmlFor="fname">TOPOS_KATOIKIAS: (eg. Athens)</label>
+        <input type="text" id="sub6" name="fname"><br><br>
+        <label htmlFor="lname">AMKA SIZIGOU 1 : (11 digits)</label>
+        <input type="text" id="sub7" name="lname"><br><br>
+        <label htmlFor="lname">AMKA SIZIGOU 2 : (11 digits)</label>
+        <input type="text" id="sub8" name="lname"><br><br>
+        <label htmlFor="lname">AMKA DIKIGOUROU : (11 digits)</label>
+        <input type="text" id="sub9" name="lname"><br><br>
+        <label htmlFor="lname">AMKA SIMBOLAIOGRAFOU : (11 digits)</label>
+        <input type="text" id="sub10" name="lname"><br><br>
+        <label htmlFor="lname">MITRONIMO SIZIGOU 1:</label>
+        <input type="text" id="sub11" name="lname"><br><br>
+        <label htmlFor="lname">PATRONIMO SIZIGOU 2:</label>
+        <input type="text" id="sub12" name="lname"><br><br>
+        <label htmlFor="lname">MITRONIMO SIZIGOU 2:</label>
+        <input type="text" id="sub13" name="lname"><br><br>
+        <label htmlFor="lname">PATRONIMO SIZIGOU 2:</label>
+        <input type="text" id="sub14" name="lname"><br><br>
+        <label htmlFor="lname">DIEUTHINSI SIZIGOU 1:</label>
+        <input type="text" id="sub15" name="lname"><br><br>
+        <label htmlFor="lname">DIEUTHINSI SIZIGOU 2:</label>
+        <input type="text" id="sub16" name="lname"><br><br>
+        <label htmlFor="lname">TEKNA:</label>
+        <input type="text" id="sub17" name="lname"><br><br>
+        <label htmlFor="lname">EPIMELIA:</label>
+        <input type="text" id="sub18" name="lname"><br><br>
+
+
+        <div>
+            <button className="insert" type="button" id="submitbutton" value="sumbit">Insert</button>
+        </div>
+
+
+    </form>
+    <button className="return" type="button" id="return">Return to my request</button>
+    <div id="header"></div>
+
+</div>
+</body>
+
+<script type="text/javascript">
+    var auth;
+    $("#submitbutton").on("click", function () {
+        if ($("#sub1").val() == "" || $("#sub2").val() == "" || $("#sub2").val() == "" || $("#sub3").val() == "" || $("#sub4").val() == "" || $("#sub5").val() == "" || $("#sub6").val() == "" || $("#sub7").val() == "" || $("#sub8").val() == "" || $("#sub9").val() == "" || $("#sub10").val() == "" || $("#sub11").val() == "" || $("#sub12").val() == "" || $("#sub13").val() == "" || $("#sub14").val() == "" || $("#sub15").val() == "" || $("#sub16").val() == "" || $("#sub17").val() == "" || $("#sub18").val() == "") {
+            alert("one or more required fields are empty");
+            return;
+        }
+        var data = new FormData();
+
+        data = {
+            "sub1": $("#sub1").val(),
+            "sub2": $("#sub2").val(),
+            "sub3": $("#sub3").val(),
+            "sub4": $("#sub4").val(),
+            "sub5": $("#sub5").val(),
+            "sub6": $("#sub6").val(),
+            "sub7": $("#sub7").val(),
+            "sub8": $("#sub8").val(),
+            "sub9": $("#sub9").val(),
+            "sub10": $("#sub10").val(),
+            "sub11": $("#sub11").val(),
+            "sub12": $("#sub12").val(),
+            "sub13": $("#sub13").val(),
+            "sub14": $("#sub14").val(),
+            "sub15": $("#sub15").val(),
+            "sub16": $("#sub16").val(),
+            "sub17": $("#sub17").val(),
+            "sub18": $("#sub18").val(),
+            "teachername1": $("#teachername1").val(),
+            "teachername2": $("#teachername2").val()
+
+        };
+        console.log(JSON.stringify(data));
+        var APIReq = new XMLHttpRequest();
+        APIReq.addEventListener("readystatechange", function () {
+            if (this.readyState === 4 && this.status == 200) {
+                var requestdata = JSON.parse(this.responseText);
+                console.log(requestdata);
+                addelementstotable(requestdata);
+            }
+        });
+        APIReq.open("POST", "http://localhost:9090/api/User");
+        APIReq.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:9090/");
+        APIReq.setRequestHeader("Authorization", 'Basic ' + auth);
+        APIReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        APIReq.send(JSON.stringify(data));
+        document.getElementById("submitbutton").disabled = true;
+        setTimeout(function () {
+            window.location = "http://localhost:3000/getRequest.html";
+        }, 2000);
+
+    });
+
+    $('document').ready(function (res) {
+        $("#header").load("header.html");
+        var FrontReq = new XMLHttpRequest();
+        FrontReq.addEventListener("readystatechange", function () {
+            if (this.readyState === 4 && this.status == 200) {
+                var requestdata = JSON.parse(this.responseText);
+                auth = requestdata.auth;
+                console.log(auth);
+                if (auth == null || auth == "") {
+                    location.replace("http://localhost:3000/error.html");
+                }
+            }
+            s
+        });
+        FrontReq.open("GET", "http://localhost:3000/getvalues");
+        FrontReq.send(null);
+    });
+
+    document.getElementById("return").onclick = function () {
+        location.href = "/Request.html"
+    }
+</script>
+
+</html>
